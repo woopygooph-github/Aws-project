@@ -1,0 +1,204 @@
+who took the cooler, im going to hold his coller
+
+goa la yen mela case uh , wommale dhillu iruntha ippo ninnu pesu 
+
+unna finish panna yevlo neram aagum , gumbal la dhanush anna rombavei pavom 
+
+yenga da yen kai la iruntha kappu , unga yellarukum vekka poran appu 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Assignment 2: Find such sets of 5 days where delivery volme is decremental than previous day. But Delivery percentage of fifth day is more than first day.
+On upload of file in s3 bucket. Glue Job should run automatically.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+
+args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args["JOB_NAME"], args)
+
+# Script generated for node S3 bucket_vayamoodu
+S3bucket_vayamoodu_node1 = glueContext.create_dynamic_frame.from_options(
+    format_options={
+        "quoteChar": '"',
+        "withHeader": True,
+        "separator": ",",
+        "optimizePerformance": False,
+    },
+    connection_type="s3",
+    format="csv",
+    connection_options={
+        "paths": ["s3://sav-buckets/data/31-05-2022-TO-31-05-2023-SBIN-ALL-N (1).csv"],
+        "recurse": True,
+    },
+    transformation_ctx="S3bucket_vayamoodu_node1",
+)
+
+# Script generated for node ApplyMapping_vayamoodu
+ApplyMapping_vayamoodu_node2 = ApplyMapping.apply(
+    frame=S3bucket_vayamoodu_node1,
+    mappings=[
+        ("Symbol", "string", "Symbol", "string"),
+        ("Series", "string", "Series", "string"),
+        ("Date", "string", "Date", "string"),
+        ("Traded Qty", "string", "Traded Qty", "string"),
+        ("Deliverable Qty", "string", "Deliverable Qty", "string"),
+        ("% Dly Qt to Traded Qty", "string", "% Dly Qt to Traded Qty", "string"),
+    ],
+    transformation_ctx="ApplyMapping_vayamoodu_node2",
+)
+
+# Script generated for node S3 bucket
+S3bucket_node3 = glueContext.write_dynamic_frame.from_options(
+    frame=ApplyMapping_vayamoodu_node2,
+    connection_type="s3",
+    format="csv",
+    connection_options={"path": "s3://sav-buckets/results/", "partitionKeys": []},
+    transformation_ctx="S3bucket_node3",
+)
+
+job.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+import sys
+from awsglue.transforms import *
+from awsglue.utils import getResolvedOptions
+from pyspark.context import SparkContext
+from awsglue.context import GlueContext
+from awsglue.job import Job
+
+args = getResolvedOptions(sys.argv, ["JOB_NAME"])
+sc = SparkContext()
+glueContext = GlueContext(sc)
+spark = glueContext.spark_session
+job = Job(glueContext)
+job.init(args["JOB_NAME"], args)
+
+# Script generated for node S3 bucket
+S3bucket_node1 = glueContext.create_dynamic_frame.from_options(
+    format_options={
+        "quoteChar": '"',
+        "withHeader": True,
+        "separator": ",",
+        "optimizePerformance": False,
+    },
+    connection_type="s3",
+    format="csv",
+    connection_options={
+        "paths": ["s3://sav-buckets/data/31-05-2022-TO-31-05-2023-SBIN-ALL-N (1).csv"],
+        "recurse": True,
+    },
+    transformation_ctx="S3bucket_node1",
+)
+
+# Script generated for node ApplyMapping
+ApplyMapping_node2 = ApplyMapping.apply(
+    frame=S3bucket_node1,
+    mappings=[
+        ("Symbol", "string", "Symbol", "string"),
+        ("Series", "string", "Series", "string"),
+        ("Date", "string", "Date", "string"),
+        ("Traded Qty", "string", "Traded Qty", "string"),
+        ("Deliverable Qty", "string", "Deliverable Qty", "string"),
+        ("% Dly Qt to Traded Qty", "string", "% Dly Qt to Traded Qty", "string"),
+    ],
+    transformation_ctx="ApplyMapping_node2",
+)
+
+# Script generated for node S3 bucket
+S3bucket_node3 = glueContext.write_dynamic_frame.from_options(
+    frame=ApplyMapping_node2,
+    connection_type="s3",
+    format="csv",
+    connection_options={
+        "path": "s3://sav-buckets/vishal-kumar/result/",
+        "partitionKeys": [],
+    },
+    transformation_ctx="S3bucket_node3",
+)
+
+job.commit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
